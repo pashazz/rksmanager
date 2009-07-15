@@ -1,0 +1,5 @@
+#/bin/bash
+rm -rf *.o
+rm -rf debug release
+rm rksmanager
+make clean

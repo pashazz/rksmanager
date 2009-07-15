@@ -1,0 +1,37 @@
+<RCC>
+    <qresource prefix="/images" >
+        <file>images/ball.png</file>
+        <file>images/cards.png</file>
+        <file>images/smallball.png</file>
+        <file>images/tactic_small.png</file>
+        <file>images/tactic.png</file>
+        <file>images/balls/01.png</file>
+        <file>images/balls/02.png</file>
+        <file>images/balls/03.png</file>
+        <file>images/balls/04.png</file>
+        <file>images/balls/05.png</file>
+        <file>images/balls/06.png</file>
+        <file>images/balls/07.png</file>
+        <file>images/balls/08.png</file>
+        <file>images/balls/09.png</file>
+        <file>images/balls/10.png</file>
+        <file>images/balls/11.png</file>
+        <file>images/balls/12.png</file>
+        <file>images/balls/13.png</file>
+        <file>images/balls/14.png</file>
+        <file>images/balls/15.png</file>
+        <file>images/balls/16.png</file>
+        <file>images/balls/17.png</file>
+        <file>images/balls/18.png</file>
+        <file>images/balls/19.png</file>
+        <file>images/balls/20.png</file>
+        <file>images/balls/21.png</file>
+        <file>images/change.png</file>
+        <file>images/changesmall.png</file>
+        <file>images/cup.png</file>
+        <file>images/flags.png</file>
+        <file>images/boots.png</file>
+        <file>images/whistle.png</file>
+        <file>images/stub.png</file>
+    </qresource>
+</RCC>

@@ -55,7 +55,6 @@ QStringList lst = trn->getData(1).toStringList();
      ui->tableWidget->setRowCount(lst.size());
 
    foreach (QString row, lst) {
-      // ui->tableWidget->setRowCount(ui->tableWidget->rowCount () + 1);
        QStringList data = row.split(";");
        for (int i = 0; i < data.count(); ++i) {
            QTableWidgetItem *it = new QTableWidgetItem (0);
@@ -203,5 +202,19 @@ void MainWindow::on_actYellow_triggered()
 void MainWindow::on_actRed_triggered()
 {
       Reporter *dlg = new Reporter(this, trn, 4);
+    dlg->exec();
+}
+
+void MainWindow::on_tableWidget_itemDoubleClicked(QTableWidgetItem* item)
+{
+    QTableWidgetItem *it = ui->tableWidget->item(item->row(), 1);
+    if (!it) {return;}
+    Club club;
+    foreach (Club c, trn->getClubs())
+    {
+        if (c.displayName == it->text()) {club = c;}
+    }
+    if (club.name.isEmpty()) {qDebug() << "Club not found!"; return;}
+    TeamInfo *dlg = new TeamInfo (this, club, ui->tableWidget->item(item->row(), 0)->text(), trn);
     dlg->exec();
 }

@@ -3,9 +3,10 @@
 
 SelectMatchDialog::SelectMatchDialog(QWidget *parent, Tournament *t) :
     QDialog(parent),
-    m_ui(new Ui::SelectMatchDialog), trn(t)
+    m_ui(new Ui::SelectMatchDialog)
 {
     m_ui->setupUi(this);
+    trn = t;
     QSqlDatabase db = QSqlDatabase::database("QSQLITE", "planning");
     db.setDatabaseName(t->getWorkingDirectory() + "/planning.db");
 
@@ -70,7 +71,7 @@ void SelectMatchDialog::on_lstMatches_itemDoubleClicked(QListWidgetItem* item)
     QString homeclub, homenick, awayclub, awaynick;
     QStringList gamers = trn->getGamers();
     QList <Club> clubs = trn->getClubs();
-    for (int i; i < clubs.count(); ++i) {
+    for (int i = 0; i < clubs.count(); ++i) {
         if (clubs.at(i).displayName == itemdata.at(0)) {
             homeclub = clubs.at(i).name;
             homenick = gamers.at(i);
@@ -92,55 +93,8 @@ void SelectMatchDialog::on_lstMatches_itemDoubleClicked(QListWidgetItem* item)
     if (dlg->exec() == QDialog::Accepted) {
      m =  dlg->getMatch();
      //Записываем матч в главную БД
-     QSqlQuery q;
-
-//обновляем достижения команды и игроков
-//см. табл. Skips
-q.prepare("SELECT player, matches FROM Skips WHERE club=:club");
-q.bindValue(":club", m.home.club.name);
-if (!q.exec()) {qDebug() << "SQL Error: "  +q.lastError().text() + " in query " + q.lastQuery();}
-else {qDebug() << "Query done" << q.executedQuery();}
-while (q.next()) {
-    QSqlQuery sq;
-    if (q.value(1).toInt() <= 1) { //удолить!!1 - дисква закончилась
-     sq.prepare("DELETE FROM Skips WHERE player=:player AND club=:club");
-     sq.bindValue(":player", q.value(0));
-     sq.bindValue(":club", m.home.club.name);
-     if (!sq.exec()) {qDebug() << "SQL Error: "  +sq.lastError().text() + " in query " + sq.lastQuery();}
-else {qDebug() << "Query done" << sq.executedQuery();}
-}
-    else {
-        sq.prepare("UPDATE Skips SET matches=:matches WHERE player=:player");
-        sq.bindValue(":matches", q.value(1).toInt() - 1);
-        sq.bindValue(":player", q.value(0));
-        if (!sq.exec()) {qDebug() << "SQL Error: "  +sq.lastError().text() + " in query " + sq.lastQuery();}
-else {qDebug() << "Query done" << sq.executedQuery();}
-    }
-}
-q.prepare("SELECT player, matches FROM Skips WHERE club=:club");
-q.bindValue(":club", m.away.club.name);
-if (!q.exec()) {qDebug() << "SQL Error: "  +q.lastError().text() + " in query " + q.lastQuery();}
-else {qDebug() << "Query done" << q.executedQuery();}
-while (q.next()) {
-    QSqlQuery sq;
-    if (q.value(1).toInt() <= 1) { //удолить!!1 - дисква закончилась
-     sq.prepare("DELETE FROM Skips WHERE player=:player AND club=:club");
-     sq.bindValue(":player", q.value(0));
-     sq.bindValue(":club", m.away.club.name);
-     if (!sq.exec()) {qDebug() << "SQL Error: "  +sq.lastError().text() + " in query " + sq.lastQuery();}
-else {qDebug() << "Query done" << sq.executedQuery();}
-}
-    else {
-        sq.prepare("UPDATE Skips SET matches=:matches WHERE player=:player");
-        sq.bindValue(":matches", q.value(1).toInt() - 1);
-        sq.bindValue(":player", q.value(0));
-        if (!sq.exec()) {qDebug() << "SQL Error: "  +sq.lastError().text() + " in query " + sq.lastQuery();}
-else {qDebug() << "Query done" << sq.executedQuery();}
-    }
-}
-   //хозяева
-
-
+trn->checkSkips(m.home.club.name, m.away.club.name);
+    QSqlQuery q;
    foreach (Player p, m.home.golaedors) {
     QSqlQuery q;
    q.prepare("UPDATE " + m.home.club.name + " SET goals=(SELECT goals FROM " + m.home.club.name +" WHERE name=:name1) +1 WHERE name=:name");
@@ -231,4 +185,24 @@ else {qDebug() << "Query done" << sq.executedQuery();}
 void SelectMatchDialog::on_lstMatches_itemClicked(QListWidgetItem* item)
 {
     m_ui->lblData->setText(item->data(Qt::UserRole).toStringList().join(";"));
+}
+
+void SelectMatchDialog::createMenus() {
+    tp = new QMenu ("Техническое поражение");
+    tp->addAction(m_ui->actTP70);
+    tp->addAction(m_ui->actTP00);
+    tp->addAction(m_ui->actTP07);
+    connect(tp, SIGNAL(triggered(QAction*)), this, SLOT(onTP(QAction*)));
+}
+void SelectMatchDialog::onTP(QAction *act) {
+      QStringList data = current->data(Qt::UserRole).toStringList();
+    QSqlQuery q;
+    QString home = data.at(0);
+    QString away = data.at(1);
+//проверку дисквалификаций не включаем!!!
+    if (act->text() == "7-0") {
+
+
+    }
+
 }

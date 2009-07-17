@@ -8,6 +8,7 @@
 #include "planningdialog.h"
 #include "aboutdialog.h"
 #include "reporter.h"
+#include "teaminfo.h"
 namespace Ui
 {
     class MainWindow;
@@ -32,6 +33,7 @@ private:
     // для будущего функционала
     bool leag;
 private slots:
+    void on_tableWidget_itemDoubleClicked(QTableWidgetItem* item);
     void on_actRed_triggered();
     void on_actYellow_triggered();
     void on_actGoleadors_triggered();

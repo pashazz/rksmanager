@@ -10,8 +10,8 @@ struct PlayerStatistics {
     int redCards;
     int YellowCards;
     int goals;
- //   bool currentSkip; //пропускает ли следующий матч;
     int skippingMatches;
+    int traumas;
 };
 struct Player {
     bool operator==( Player p) {

@@ -230,8 +230,8 @@ q.prepare("CREATE TABLE HomeStart (id INTEGER PRIMARY KEY, player TEXT)");
  else {qDebug() << "Query done" << q.executedQuery();}
  foreach (Change ch, m.home.changes) {
      q.prepare("INSERT INTO HomeChanges (poff, pon) VALUES (:poff, :pon)");
-     q.bindValue(":off", ch.first.name);
-     q.bindValue(":on", ch.second.name);
+     q.bindValue(":poff", ch.first.name);
+     q.bindValue(":pon", ch.second.name);
          if (!q.exec()) {qDebug() << "SQL Error: "  +q.lastError().text() + " in query " + q.lastQuery();}
  else {qDebug() << "Query done" << q.executedQuery();}
  }
@@ -240,13 +240,22 @@ q.prepare("CREATE TABLE HomeStart (id INTEGER PRIMARY KEY, player TEXT)");
  else {qDebug() << "Query done" << q.executedQuery();}
  foreach (Change ch, m.away.changes) {
      q.prepare("INSERT INTO AwayChanges (poff, pon) VALUES (:poff, :pon)");
-     q.bindValue(":off", ch.first.name);
-     q.bindValue(":on", ch.second.name);
+     q.bindValue(":poff", ch.first.name);
+     q.bindValue(":pon", ch.second.name);
          if (!q.exec()) {qDebug() << "SQL Error: "  +q.lastError().text() + " in query " + q.lastQuery();}
  else {qDebug() << "Query done" << q.executedQuery();}
  }
+ //запись информации о матче
+ q.prepare("CREATE TABLE MatchInfo (id INTEGER PRIMARY KEY name TEXT value TEXT)");
+    if (!q.exec()) {qDebug() << "SQL Error: "  +q.lastError().text() + " in query " + q.lastQuery();}
+ else {qDebug() << "Query done" << q.executedQuery();}
+ q.prepare("INSERT INTO MatchInfo (name, value) VALUES (:name, :value");
+ q.bindValue(":name", "homegoals");
+ q.bindValue(":value", m.home.goals);
+
  db.close();
  return fileName;
+
 }
 
 Match AddMatchDialog::getMatch() {

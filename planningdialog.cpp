@@ -20,7 +20,7 @@ rowsNeed = t->getClubs().count();
   QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "planning");
 db.setDatabaseName(file);
 
-currentTour = db.tables().count() +1;
+currentTour = db.tables().count() + 1;
 setWindowTitle(tr("Планирование"));
 connect (m_ui->cbGuest, SIGNAL(currentIndexChanged(int)), this, SLOT(checkAddingPossible(int)));
 connect (m_ui->cbHome, SIGNAL(currentIndexChanged(int)), this, SLOT(checkAddingPossible(int)));

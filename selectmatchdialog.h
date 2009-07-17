@@ -1,10 +1,9 @@
 #ifndef SELECTMATCHDIALOG_H
 #define SELECTMATCHDIALOG_H
-#include "viewer/addmatchdialog.h"
+#include "addmatchdialog.h"
 #include <QtGui>
 #include <QtSql>
 #include "league.h"
-
 namespace Ui {
     class SelectMatchDialog;
 }
@@ -23,10 +22,15 @@ private:
     void loadMatches(int );
     Tournament *trn;
      short int currentTour;
+     void createMenus();
+     QMenu *tp;
+     QListWidgetItem *current;
 private slots:
     void on_lstMatches_itemClicked(QListWidgetItem* item);
     void on_lstMatches_itemDoubleClicked(QListWidgetItem* item);
     void on_sbTours_valueChanged(int );
+    void onTP(QAction *act);
+
 };
 
 #endif // SELECTMATCHDIALOG_H

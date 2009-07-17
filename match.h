@@ -5,7 +5,9 @@
 #include <QStringList>
 #include <QtCore>
 #include <QtSql>
+
 class Match;
+//old 
 class Club {
    public:
 
@@ -14,7 +16,6 @@ class Club {
     QString displayName;
     QList <Player> players;
     QList <Match> matches;
-    QPair <int, int> goals;
     Player getPlayer(int number);
     Player getPlayer(QString name);
 };
@@ -36,6 +37,7 @@ struct Match {
    MatchStatistics home;
    MatchStatistics away;
     QString matchfile;
+    int tour;
 };
 
 

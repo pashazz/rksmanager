@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>663</width>
-    <height>314</height>
+    <width>665</width>
+    <height>316</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -52,6 +52,21 @@
     </widget>
    </item>
   </layout>
+  <action name="actTP70">
+   <property name="text">
+    <string>7-0</string>
+   </property>
+  </action>
+  <action name="actTP00">
+   <property name="text">
+    <string>0-0</string>
+   </property>
+  </action>
+  <action name="actTP07">
+   <property name="text">
+    <string>0-7</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>

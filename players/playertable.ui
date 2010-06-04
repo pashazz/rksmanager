@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PlayerTable</class>
+ <widget class="QDialog" name="PlayerTable">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>923</width>
+    <height>449</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Рейтинг игроков</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTableWidget" name="tableWidget">
+     <property name="contextMenuPolicy">
+      <enum>Qt::ActionsContextMenu</enum>
+     </property>
+     <column>
+      <property name="text">
+       <string>Ник</string>
+      </property>
+      <property name="font">
+       <font>
+        <family>DejaVu Sans</family>
+       </font>
+      </property>
+      <property name="background">
+       <color>
+        <red>255</red>
+        <green>170</green>
+        <blue>255</blue>
+       </color>
+      </property>
+      <property name="foreground">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>49</red>
+         <green>42</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Матчи</string>
+      </property>
+      <property name="background">
+       <color>
+        <red>205</red>
+        <green>255</green>
+        <blue>166</blue>
+       </color>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>В</string>
+      </property>
+      <property name="background">
+       <color>
+        <red>52</red>
+        <green>184</green>
+        <blue>255</blue>
+       </color>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Н</string>
+      </property>
+      <property name="background">
+       <color>
+        <red>52</red>
+        <green>184</green>
+        <blue>255</blue>
+       </color>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>П</string>
+      </property>
+      <property name="background">
+       <color>
+        <red>52</red>
+        <green>184</green>
+        <blue>255</blue>
+       </color>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>ТП</string>
+      </property>
+      <property name="background">
+       <color>
+        <red>204</red>
+        <green>161</green>
+        <blue>255</blue>
+       </color>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>анреги</string>
+      </property>
+      <property name="background">
+       <color>
+        <red>170</red>
+        <green>170</green>
+        <blue>127</blue>
+       </color>
+      </property>
+      <property name="foreground">
+       <brush brushstyle="Dense1Pattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Бонусы</string>
+      </property>
+      <property name="background">
+       <color>
+        <red>255</red>
+        <green>178</green>
+        <blue>179</blue>
+       </color>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Баллы</string>
+      </property>
+      <property name="font">
+       <font>
+        <family>UnDotum</family>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="background">
+       <color>
+        <red>134</red>
+        <green>199</green>
+        <blue>255</blue>
+       </color>
+      </property>
+      <property name="foreground">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>255</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Ok</set>
+     </property>
+     <property name="centerButtons">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+  <action name="actAdd">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/images/images/flags.png</normaloff>:/images/images/flags.png</iconset>
+   </property>
+   <property name="text">
+    <string>Добавить игрока</string>
+   </property>
+  </action>
+  <action name="actBonus">
+   <property name="text">
+    <string>Установить бонус...</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../icons.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>PlayerTable</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>PlayerTable</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

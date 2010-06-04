@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1155</width>
+    <height>430</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>RKS Manager</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTableWidget" name="tableWidget">
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <column>
+       <property name="text">
+        <string>Игрок</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Команда</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>И</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>В</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Н</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>П</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>МЗ</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>МП</string>
+       </property>
+       <property name="font">
+        <font>
+         <kerning>true</kerning>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Очки</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1155</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="mnuFile">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="actNew"/>
+    <addaction name="actOpen"/>
+    <addaction name="separator"/>
+    <addaction name="actPlayers"/>
+    <addaction name="separator"/>
+    <addaction name="actPrint"/>
+    <addaction name="actExit"/>
+   </widget>
+   <widget class="QMenu" name="mnuLeague">
+    <property name="title">
+     <string>Лига</string>
+    </property>
+    <addaction name="actPlanning"/>
+    <addaction name="actPlay"/>
+    <addaction name="actChange"/>
+    <addaction name="actManageViews"/>
+    <addaction name="separator"/>
+    <addaction name="actAddPlayer"/>
+    <addaction name="separator"/>
+    <addaction name="actWrite"/>
+   </widget>
+   <widget class="QMenu" name="mnuView">
+    <property name="title">
+     <string>Вид</string>
+    </property>
+    <addaction name="actFont"/>
+    <addaction name="actColor"/>
+    <addaction name="separator"/>
+    <addaction name="actView"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Экспорт</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="mnuStats">
+    <property name="title">
+     <string>Статистика</string>
+    </property>
+    <addaction name="actGoleadors"/>
+    <addaction name="actYellow"/>
+    <addaction name="actRed"/>
+   </widget>
+   <addaction name="mnuFile"/>
+   <addaction name="mnuLeague"/>
+   <addaction name="mnuView"/>
+   <addaction name="menu_2"/>
+   <addaction name="mnuStats"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="windowTitle">
+    <string>Матчи</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QTableView" name="tbMatches"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_2">
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QTableView" name="tbCup"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="actNew">
+   <property name="text">
+    <string>Новый турнир</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actOpen">
+   <property name="text">
+    <string>Открыть турнир</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actExit">
+   <property name="text">
+    <string>Выход</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actPlanning">
+   <property name="text">
+    <string>Спланировать тур</string>
+   </property>
+  </action>
+  <action name="actPlay">
+   <property name="text">
+    <string>Сыграть тур</string>
+   </property>
+  </action>
+  <action name="actHelp">
+   <property name="text">
+    <string>О программе</string>
+   </property>
+  </action>
+  <action name="actFont">
+   <property name="text">
+    <string>Шрифт таблицы</string>
+   </property>
+  </action>
+  <action name="actColor">
+   <property name="text">
+    <string>Цвет фона таблицы</string>
+   </property>
+  </action>
+  <action name="actPrint">
+   <property name="text">
+    <string>Печать</string>
+   </property>
+  </action>
+  <action name="actGoleadors">
+   <property name="text">
+    <string>Бомбардиры</string>
+   </property>
+  </action>
+  <action name="actYellow">
+   <property name="text">
+    <string>Желтые карточки</string>
+   </property>
+  </action>
+  <action name="actRed">
+   <property name="text">
+    <string>Красные карточки</string>
+   </property>
+  </action>
+  <action name="actChange">
+   <property name="text">
+    <string>Заменить игрока</string>
+   </property>
+  </action>
+  <action name="actPlayers">
+   <property name="text">
+    <string>Игроки</string>
+   </property>
+  </action>
+  <action name="actView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Просмотреть представления</string>
+   </property>
+  </action>
+  <action name="actManageViews">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Представления...</string>
+   </property>
+  </action>
+  <action name="actAddPlayer">
+   <property name="text">
+    <string>Добавить запасного игрока</string>
+   </property>
+  </action>
+  <action name="actWrite">
+   <property name="text">
+    <string>Записать результаты</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

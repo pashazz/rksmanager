@@ -1,4 +1,5 @@
 #include "league.h"
+#include "playerworker.h"
 QList <Player> Tournament::getPlayers (QString club) {
     QSqlQuery q;
     QList <Player> list;
@@ -19,8 +20,8 @@ while (q.next()) {
 return list;
 }
 //Tournament - лига
-Tournament::Tournament (QString dir, QString title, QString country, QStringList teams, QStringList gmrs)
-       : workdir(dir), gamers(gmrs)
+Tournament::Tournament (QString dir, QString title, QString country, QStringList teams, QStringList gmrs, bool isViews)
+       : workdir(dir), gamers(gmrs), _view(isViews)
 {
     QString CONFDIR = "/.rks";
     QDir mydir(workdir + "/matches");
@@ -111,7 +112,10 @@ else {qDebug() << "Query done" << clubQuery.executedQuery();}
   if (!query.exec()) {qDebug() << "SQL Error: " + query.lastError().text() + " in query " + query.lastQuery();}
  else {qDebug() << "team added:" << dispName;}
     }
-
+ //create views
+    if (isViews){
+QDir d(dir);
+d.mkdir(dir+"/views");}
     qDebug() << "creating index";
    QFile settings (dir+"/settings.ini");
    if (!settings.exists()) {settings.open(QIODevice::WriteOnly);settings.close();}
@@ -119,6 +123,7 @@ else {qDebug() << "Query done" << clubQuery.executedQuery();}
    stg.beginGroup("Tournament");
    stg.setValue("title", title);
    stg.setValue("country", country);
+   stg.setValue("views", isViews);
    stg.endGroup();
 }
 
@@ -153,14 +158,30 @@ else {qDebug() << "Query done: " + q.executedQuery();}
 
 //обновляем табличку
 //хозяева
-
+          QString homeNick = getNick(m.home.club.name);
+         QString awayNick = getNick(m.away.club.name);
+QSqlDatabase db = QSqlDatabase::database("players");
+QSqlQuery sq (db);
     int type = 0;
     if (m.home.goals > m.away.goals) //победа хозяев, тип 1
+    {
         type = 1;
+        //устанавливаем базовый рейтинг
+   PlayerWorker::win(homeNick);
+   PlayerWorker::lose(awayNick);
+    }
     else if (m.home.goals == m.away.goals) //ничья, тип 2
+    {
         type = 2;
+        PlayerWorker::draw(homeNick);
+        PlayerWorker::draw(awayNick);
+           }
     else if (m.home.goals < m.away.goals) //победа гостей, тип 3
+    {
         type = 3;
+        PlayerWorker::win(awayNick);
+        PlayerWorker::lose(homeNick);
+            }
    QString hg = QVariant (m.home.goals).toString();
    QString ag = QVariant(m.away.goals).toString();
     //обновляем дос-ния
@@ -246,6 +267,7 @@ Tournament::Tournament (QString dir)
  QSettings stg (dir + "/settings.ini", QSettings::IniFormat, this);
  stg.beginGroup("Tournament");
  _title = stg.value("title").toString();
+ _view = stg.value("views").toBool();
  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
  db.setDatabaseName(dir + "/tour.db");
  if (!QFile::exists(dir+"/tour.db")) {qDebug() << "file " + dir +"/tour.db not exists!";return;}
@@ -265,6 +287,14 @@ gamers.append(q.value(q.record().indexOf("nick")).toString());
 
 }
 
+q.prepare("SELECT player FROM Changes");
+if (!q.exec()) {qDebug() << "SQL Error: " + q.lastError().text() + ", query " + q.executedQuery();}
+else {qDebug() << "Query done: " + q.executedQuery();}
+while (q.next())
+    changes.append(q.value(0).toString());
+
+if (_view)
+    loadViews();
 }
 
 void Tournament::finalize() {
@@ -272,6 +302,7 @@ void Tournament::finalize() {
     ;
 
 }
+
 
 QVariant Tournament::getData(int role) {
     if (role == 1) {
@@ -322,7 +353,62 @@ list << currentValue;
            case 4:
            target = "red";
            break;
+           case 5:
+           //показываем вьювы вместо команд
+           QStringList list;
+           foreach (View v, view) {
+               QString name = v.name();
+               QString nick;
+               QStringList names;
+               foreach (Club c, v.clubs())
+                   names.append(c.name);
+               int games, win, draw, lose, gs, gm, points;
+               games =0;
+               win  =0;
+               draw = 0;
+               lose = 0;
+               gs = 0;
+               gm = 0;
+               points =0;
+
+             QSqlQuery q;
+        q.prepare("SELECT * FROM Teams  ORDER BY points");
+if (!q.exec()) {qDebug() << "SQL Error: " + q.lastError().text() + ", query " + q.lastQuery();}
+else {qDebug() << "Query done: " + q.lastQuery();}
+while (q.next()) {
+    if (!names.contains(q.value(2).toString()))
+        continue;
+    if (!nick.isEmpty()) {
+nick.append("/");
+}
+
+    nick.append(q.value(1).toString());
+games += getMatches(q.value(3).toString()).toInt();
+win += q.value(4).toInt();
+draw += q.value(5).toInt();
+lose += q.value(6).toInt();
+gs += q.value(7).toInt();
+gm += q.value(8).toInt();
+points += q.value(9).toInt();
+           }
+QString currentVaue;
+currentVaue.append(nick);
+currentVaue.append(";");
+currentVaue.append(name);
+currentVaue.append(";");
+currentVaue.append(QVariant(games).toString() + ";");
+currentVaue.append(QVariant(win).toString() + ";");
+currentVaue.append(QVariant(draw).toString() + ";");
+currentVaue.append(QVariant(lose).toString() + ";");
+currentVaue.append(QVariant(gs).toString() + ";");
+currentVaue.append(QVariant(gm).toString() + ";");
+currentVaue.append(QVariant(points).toString() + ";");
+list.append(currentVaue);
        }
+           return list;
+           break;
+       }
+
        QSqlQuery q;
        QStringList list;
        foreach (Club c, clubs) {
@@ -337,6 +423,8 @@ list << currentValue;
        return list;
     }
 }
+
+
 
 QString Tournament::getMatches(QString team) {
     QSqlQuery q;
@@ -409,28 +497,35 @@ else {qDebug() << "Query done" << sq.executedQuery();}
 }
 
 void Tournament::addMatch(QString home, QString away, TechResult::Result res, int tour) { //краткие имена
+    qDebug() << "Техническое поражение!" << home << away;
     QSqlQuery q;
-   QString homeDisplay, awayDisplay;
+QString homeDisplay, awayDisplay;
    foreach(Club c, clubs) {
-       if (c.name == home)
-           homeDisplay = c.displayName;
-       else if (c.name == away)
-           awayDisplay = c.displayName;
+       if (c.displayName == home)
+           homeDisplay = c.name;
+       else if (c.displayName == away)
+           awayDisplay = c.name;
 
    }
+QString homeNick = getNick(homeDisplay);
+QString awayNick = getNick(awayDisplay);
     q.prepare("INSERT INTO Matches (home, away, tour, matchfile) VALUES (:home, :away,:tour, :matchfile)");
-    q.bindValue(":home", homeDisplay);
-    q.bindValue(":away", awayDisplay);
+    q.bindValue(":home", home);
+    q.bindValue(":away", away);
     q.bindValue(":tour", tour);
     switch (res) {
         case TechResult::HomeWin:
         q.bindValue(":matchfile", "7-0");
+PlayerWorker::tp(awayNick);
         break;
         case TechResult::AwayWin:
         q.bindValue(":matchfile", "0-7");
+        PlayerWorker::tp (homeNick);
         break;
         case TechResult::Draw:
         q.bindValue(":matchfile", "0-0");
+        PlayerWorker::tp(homeNick);
+        PlayerWorker::tp(awayNick);
         break;
 
     }
@@ -438,56 +533,57 @@ void Tournament::addMatch(QString home, QString away, TechResult::Result res, in
 else {qDebug() << "Query done" << q.executedQuery();}
 switch (res) {
     case TechResult::HomeWin:
+    //
      q.prepare("UPDATE Teams SET win=(SELECT win FROM Teams WHERE club=:club1)+1, goalsScored=(SELECT goalsScored FROM Teams WHERE club=:club2)+7, points=(SELECT points FROM Teams WHERE club=:club3)+3 WHERE club=:club");
-        q.bindValue(":club1", home); //win
-        q.bindValue(":club2", home); //goalsscore
-        q.bindValue(":club3", home); //goalsmissing
-        q.bindValue(":club", home);
+        q.bindValue(":club1", homeDisplay); //win
+        q.bindValue(":club2", homeDisplay); //goalsscore
+        q.bindValue(":club3", homeDisplay); //goalsmissing
+        q.bindValue(":club", homeDisplay);
 if (!q.exec()) {qDebug() << "SQL Error: " + q.lastError().text() + ", query " + q.executedQuery();}
 else {qDebug() << "Query done: " + q.executedQuery();}
 
 
        //гости
            q.prepare("UPDATE Teams SET lose=(SELECT lose FROM Teams WHERE club=:club1)+1,  goalsMissing=(SELECT goalsMissing FROM Teams WHERE club=:club2)+7 WHERE club=:club");
-        q.bindValue(":club1", away);
-        q.bindValue(":club2", away);
-        q.bindValue(":club", away);
+        q.bindValue(":club1", awayDisplay);
+        q.bindValue(":club2", awayDisplay);
+        q.bindValue(":club", awayDisplay);
         if (!q.exec()) {qDebug() << "SQL Error: " + q.lastError().text() + ", query " + q.executedQuery();}
         else {qDebug() << "Query done: " + q.executedQuery();}
 
         break;
   case TechResult::AwayWin:
        q.prepare("UPDATE Teams SET lose=(SELECT lose FROM Teams WHERE club=:club1)+1, goalsMissing=(SELECT goalsMissing FROM Teams WHERE club=:club2)+7 WHERE club=:club");
-        q.bindValue(":club1", home); //win
-        q.bindValue(":club2", home); //goalsscore
-         q.bindValue(":club", home);
+        q.bindValue(":club1", homeDisplay); //win
+        q.bindValue(":club2", homeDisplay); //goalsscore
+         q.bindValue(":club", homeDisplay);
 if (!q.exec()) {qDebug() << "SQL Error: " + q.lastError().text() + ", query " + q.executedQuery();}
 else {qDebug() << "Query done: " + q.executedQuery();}
 
 
 q.prepare("UPDATE Teams SET win=(SELECT win FROM Teams WHERE club=:club1)+1, goalsScored=(SELECT goalsScored FROM Teams WHERE club=:club2)+7, points=(SELECT points FROM Teams WHERE club=:club3)+3 WHERE club=:club");
-        q.bindValue(":club1", away); //win
-        q.bindValue(":club2", away); //goalsscore
-        q.bindValue(":club3", away); //goalsmissing
-        q.bindValue(":club", away);
+        q.bindValue(":club1", awayDisplay); //win
+        q.bindValue(":club2", awayDisplay); //goalsscore
+        q.bindValue(":club3", awayDisplay); //goalsmissing
+        q.bindValue(":club", awayDisplay);
 if (!q.exec()) {qDebug() << "SQL Error: " + q.lastError().text() + ", query " + q.executedQuery();}
 else {qDebug() << "Query done: " + q.executedQuery();}
 break;
 case TechResult::Draw:
                 //хозяева
         q.prepare("UPDATE Teams SET draw=(SELECT draw FROM Teams WHERE club=:club1)+1, points=(SELECT points FROM Teams WHERE club=:club2)+1 WHERE club=:club");
-        q.bindValue(":club1", home); //win
-        q.bindValue(":club2", home); //goalsscore
-        q.bindValue(":club", home);
+        q.bindValue(":club1", homeDisplay); //win
+        q.bindValue(":club2", homeDisplay); //goalsscore
+        q.bindValue(":club", homeDisplay);
 if (!q.exec()) {qDebug() << "SQL Error: " + q.lastError().text() + ", query " + q.executedQuery();}
 else {qDebug() << "Query done: " + q.executedQuery();}
 
 
        //гости
         q.prepare("UPDATE Teams SET draw=(SELECT draw FROM Teams WHERE club=:club1)+1, points=(SELECT points FROM Teams WHERE club=:club2)+1 WHERE club=:club");
-        q.bindValue(":club1", away);
-        q.bindValue(":club2", away);
-        q.bindValue(":club", away);
+        q.bindValue(":club1", awayDisplay);
+        q.bindValue(":club2", awayDisplay);
+        q.bindValue(":club", awayDisplay);
         if (!q.exec()) {qDebug() << "SQL Error: " + q.lastError().text() + ", query " + q.executedQuery();}
         else {qDebug() << "Query done: " + q.executedQuery();}
 
@@ -500,4 +596,82 @@ else {qDebug() << "Query done: " + q.executedQuery();}
 void Tournament::loadMatches() {
 //coming soon
 
+}
+
+void Tournament::setChangeList(QStringList lst) {
+    //можно вызвать только 1 раз, далее makeChange или просто добавить запись в таблицу
+    QSqlQuery q;
+    q.prepare("CREATE TABLE Changes (id INTEGER PRIMARY KEY, player TEXT)");
+      if (!q.exec()) {qDebug() << "SQL Error: " + q.lastError().text() + ", query " + q.executedQuery();}
+        else {qDebug() << "Query done: " + q.executedQuery();}
+        foreach (QString str,   lst) {
+            q.prepare("INSERT INTO Changes (player) VALUES (?)");
+            q.addBindValue(str);
+                  if (!q.exec()) {qDebug() << "SQL Error: " + q.lastError().text() + ", query " + q.executedQuery();}
+        else {qDebug() << "Query done: " + q.executedQuery();}
+        }
+changes = lst;
+}
+
+bool Tournament::makeChange(QString before, QString after) {
+    if (before.isEmpty() || after.isEmpty())
+        return false;
+
+    //unreg this
+    PlayerWorker::unreg(before);
+
+QSqlQuery q;
+
+q.prepare("UPDATE Teams SET nick=:after WHERE nick=:before");
+q.bindValue(":before", before);
+q.bindValue(":after", after);
+if (!q.exec()) {qDebug() << "SQL Error: " + q.lastError().text() + ", query " + q.executedQuery();}
+        else {qDebug() << "Query done: " + q.lastQuery();}
+q.prepare("DELETE FROM Changes WHERE player=:after");
+q.bindValue(":after", after);
+if (!q.exec()) {qDebug() << "SQL Error: " + q.lastError().text() + ", query " + q.executedQuery();}
+        else {qDebug() << "Query done: " + q.lastQuery();}
+   changes.removeOne(after);
+   gamers.removeOne(before);
+   gamers.append(after);
+
+return true;
+}
+
+void Tournament::loadViews()
+{
+    view.clear();
+QDir d(workdir+"/views");
+foreach (QString file, d.entryList(QDir::NoDotAndDotDot | QDir::Files | QDir::Readable)) {
+View v (d.absolutePath() + QDir::separator() + file, clubs);
+view.append(v);
+}
+}
+
+
+void Tournament::addView(QString name, QList <Club> c)
+{
+    View v;
+QString fileName = name + ".ini";
+v.setFileName(workdir + QDir::separator() +"views" + QDir::separator() +fileName);
+    v.setName(name);
+    v.setClubs(c);
+    view.append(v);
+
+}
+
+void Tournament::removeView(View v)
+{
+    QFile::remove(v.filename());
+    loadViews();
+}
+
+QString Tournament::getNick(QString s) {
+    QSqlQuery q;
+      q.prepare("SELECT nick FROM Teams WHERE club=:name");
+        q.bindValue(":name", s);
+        if (!q.exec()) {qDebug() << "SQL Error: " + q.lastError().text() + ", query " + q.executedQuery();}
+else {qDebug() << "Query done: " + q.executedQuery();}
+        q.first();
+        return q.value(0).toString();
 }

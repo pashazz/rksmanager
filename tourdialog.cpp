@@ -35,10 +35,16 @@ void TourDialog::appendBoxes (){
     foreach (QString country, confdir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
         m_ui->cbCountry->addItem(country.at(0).toUpper() + country.right(country.count() -1));
         countries.append( confdir.path() + "/" + country);
-
     }
 
-
+m_ui->cbViews->addAction(QWhatsThis::createAction(m_ui->cbViews));
+//Also append players
+QSqlDatabase db = QSqlDatabase::database("players");
+QSqlQuery q(db);
+q.prepare("SELECT nick FROM players");
+q.exec();
+while (q.next())
+    gamers << q.value(0).toString();
 }
 QStringList TourDialog::getTeams(QString dir) {
     QDir d (dir);
@@ -54,7 +60,9 @@ QStringList TourDialog::getTeams(QString dir) {
 
 void TourDialog::on_buttonBox_accepted()
 {
-    Tournament *t = new Tournament(dir, m_ui->txtName->text(), m_ui->cbCountry->currentText(), teams, players);
+    if (teams.count() < 2) {QMessageBox::warning(this, "WARNING!", "мало игроков!");}
+    Tournament *t = new Tournament(dir, m_ui->txtName->text(), m_ui->cbCountry->currentText(), teams, players, m_ui->cbViews->isChecked());
+    t->setChangeList(changes);
     emit getTounament(t);
 
 }
@@ -64,6 +72,8 @@ void TourDialog::onTeam(QString nick, QString team) {
     players<<nick;
     teams << team;
     avalTeams.removeAt(avalTeams.indexOf(team));
+    gamers.removeOne(nick);
+
 QListWidgetItem *item = new QListWidgetItem(nick, m_ui->lstPlayers);
 item->setData(Qt::UserRole, team);
 }
@@ -71,7 +81,7 @@ void TourDialog::on_cmdNew_clicked()
 {
 
   //формируем список команд
-   addTeamDialog *dlg = new addTeamDialog(this, avalTeams);
+   addTeamDialog *dlg = new addTeamDialog(this, avalTeams, gamers);
    connect(dlg, SIGNAL(teamAdded(QString,QString)), this, SLOT(onTeam(QString,QString)));
    dlg->exec();
 }
@@ -104,3 +114,11 @@ void TourDialog::on_lstPlayers_itemClicked(QListWidgetItem* item)
         m_ui->lblTeam->setText(item->data(Qt::UserRole).toString());
 
 }
+
+void TourDialog::on_cmdChange_clicked()
+{
+    QString nick = QInputDialog::getItem(this, "Замена", "Выберите игрока", gamers);
+    if (nick.isEmpty()) {return;}
+    changes.append(nick);
+    m_ui->lstChange->addItem(nick);
+    gamers.removeOne(nick);}

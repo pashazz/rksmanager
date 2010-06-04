@@ -30,8 +30,8 @@
         <file>images/changesmall.png</file>
         <file>images/cup.png</file>
         <file>images/flags.png</file>
-        <file>images/boots.png</file>
-        <file>images/whistle.png</file>
+        <file alias="traumas" >images/boots.png</file>
+        <file alias="yellow" >images/whistle.png</file>
         <file>images/stub.png</file>
     </qresource>
 </RCC>

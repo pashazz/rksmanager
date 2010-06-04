@@ -14,6 +14,7 @@ foreach (Club c, clubs) {
    m_ui->cbGuest->addItem(c.displayName);
 }
 rowsNeed = t->getClubs().count();
+
      QString file = t->getWorkingDirectory() + "/planning.db";
     QFile f (file);
     if (!f.exists()) {f.open(QIODevice::WriteOnly);f.close();}
@@ -116,6 +117,10 @@ q.bindValue(":away", m_ui->cbGuest->currentText());
    while (q.next()) {
        if (q.value(0).toInt() > 0) {
        m_ui->btnAdd->setEnabled(false);
+//hack
+       if (m_ui->tblPairs->rowCount() == rowsNeed)
+                  m_ui->btnAdd->setEnabled(false);
+
 return;
        }
    }

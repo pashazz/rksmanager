@@ -10,7 +10,7 @@ namespace Ui {
 class addTeamDialog : public QDialog {
     Q_OBJECT
 public:
-    addTeamDialog(QWidget *parent, QStringList teams);
+    addTeamDialog(QWidget *parent, QStringList teams, QStringList players);
     ~addTeamDialog();
 signals:
     void teamAdded (QString nick, QString team);

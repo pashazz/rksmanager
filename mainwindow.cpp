@@ -1,10 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "selectmatchdialog.h"
+#include "changedialog.h"
+#include "playertable.h"
+#include "viewdialog.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+        checkPlayers();
+            qDebug() << "open database " ;
+
     //QSQLITE check
     if (!QSqlDatabase::drivers().contains("QSQLITE"))
     {
@@ -21,12 +27,17 @@ ui->mnuStats->setEnabled(false);
 leag = true;
 loaded = false;
 ui->tableWidget->setSortingEnabled(true);
-
+ui->tableWidget->sortByColumn(8);
+//статусбар
+infolabel = new QLabel (this);
+statusBar()->addWidget(infolabel);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+     QSqlDatabase db = QSqlDatabase::database("player");
+    db.close();
 }
 
 void MainWindow::on_actNew_triggered()
@@ -77,8 +88,10 @@ QStringList lst = trn->getData(1).toStringList();
      ui->actPlanning->setText(tr("Спланировать тур: %1").arg(QVariant(*message).toString()));
 else
     ui->mnuLeague->removeAction(ui->actPlanning);
+ui->tableWidget->sortByColumn(8);
 
    loaded = true;
+   createStatusBar();
 }
 
 void MainWindow::getTournament(Tournament *t) {
@@ -93,6 +106,7 @@ void MainWindow::getTournament(Tournament *t) {
        for (int i = 0; i < data.count(); ++i) {
            QTableWidgetItem *it = new QTableWidgetItem (0);
            it->setText(data.at(i));
+           it->setFlags(Qt::ItemIsEnabled);
            ui->tableWidget->setItem(lst.indexOf(row), i, it);
 
        }
@@ -102,7 +116,9 @@ void MainWindow::getTournament(Tournament *t) {
    setWindowTitle(tr("%1 - RKS Manager").arg(trn->title()));
    //set planning
 ui->actPlanning->setText(tr("Спланировать тур: 1"));
-loaded = true;
+loaded = true;ui->tableWidget->sortByColumn(8);
+
+createStatusBar();
    }
 
 
@@ -122,7 +138,8 @@ void MainWindow::on_actHelp_triggered()
 void MainWindow::createMenus() {
     ui->mnuLeague->setEnabled(true);
     ui->mnuStats->setEnabled(true);
-
+    ui->actView->setEnabled(trn->isViewsEnabled());
+    ui->actManageViews->setEnabled(trn->isViewsEnabled());
 }
 
 
@@ -151,8 +168,6 @@ else
 
 void MainWindow::on_actColor_triggered()
 {
-    //TODO
-
 
 }
 
@@ -165,11 +180,16 @@ void MainWindow::on_actFont_triggered()
 
 }
 
-void MainWindow::appendTable() {
+void MainWindow::appendTable(bool v) {
+    int n;
+if (v)
+    n = 5;
+else
+    n = 1;
     ui->tableWidget->clear();
     QStringList labels;
     labels << "Игрок" << "Команда" << "И" << "В" << "Н" << "П" << "MЗ" << "МП" << "Очки";
-    QStringList lst = trn->getData(1).toStringList();
+    QStringList lst = trn->getData(n).toStringList();
      ui->tableWidget->setRowCount(lst.size());
     ui->tableWidget->setHorizontalHeaderLabels(labels);
    foreach (QString row, lst) {
@@ -177,14 +197,15 @@ void MainWindow::appendTable() {
        QStringList data = row.split(";");
        for (int i = 0; i < data.count(); ++i) {
            QTableWidgetItem *it = new QTableWidgetItem (0);
+           it->setFlags(Qt::ItemIsEnabled);
            it->setText(data.at(i));
            ui->tableWidget->setItem(lst.indexOf(row), i, it);
 
        }
 
        }
-
-
+ui->tableWidget->sortByColumn(8);
+createStatusBar();
 }
 
 void MainWindow::on_actGoleadors_triggered()
@@ -216,5 +237,86 @@ void MainWindow::on_tableWidget_itemDoubleClicked(QTableWidgetItem* item)
     }
     if (club.name.isEmpty()) {qDebug() << "Club not found!"; return;}
     TeamInfo *dlg = new TeamInfo (this, club, ui->tableWidget->item(item->row(), 0)->text(), trn);
+    dlg->exec();
+}
+
+void MainWindow::createStatusBar() {
+   QString str;
+    str.append("Матчей:");
+    QSqlQuery q;
+    q.prepare("SELECT COUNT (*) FROM Matches");
+    q.exec();
+    q.first();
+    str.append(q.value(0).toString());
+    str.append("  Команд: ");
+      q.prepare("SELECT COUNT (*) FROM Teams");
+    q.exec();
+    q.first();
+    str.append(q.value(0).toString());
+    str.append("  Дисквалификаций:");
+   q.prepare("SELECT COUNT (*) FROM Skips");
+    q.exec();
+    q.first();
+    str.append(q.value(0).toString());
+
+   str.append(" Запасных: ");
+    q.prepare("SELECT COUNT (*) FROM Changes");
+    q.exec();
+    q.first();
+    str.append(q.value(0).toString());
+
+    infolabel->setText(str);
+}
+
+void MainWindow::on_actChange_triggered()
+{
+    ChangeDialog *dlg = new ChangeDialog (this, trn);
+    if (dlg->exec() == QDialog::Accepted) {
+        appendTable();
+    }
+
+}
+
+void MainWindow::on_actPlayers_triggered()
+{
+PlayerTable *dlg = new PlayerTable(this);
+dlg->exec();
+}
+void MainWindow::checkPlayers() {
+            qDebug() << "open database " ;
+
+    QFile f(QDir::homePath() + "/.rks/players.db");
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "players");
+           db.setDatabaseName(f.fileName());
+
+    if (!f.exists()) {
+        //create
+        qDebug() << "open database " << db;
+        if (!db.open()) {QMessageBox::critical(this, "Критическая ошибка!",  db.lastError().text());}
+
+    QSqlQuery q (db);
+q.prepare("CREATE TABLE Players (id INTEGER PRIMARY KEY, smallname TEXT, nick TEXT, name TEXT)");
+q.exec();
+q.prepare("CREATE TABLE Rating (id INTEGER PRIMARY KEY, nick TEXT, matches INTEGER, win INTEGER,  draw INTEGER, lose INTEGER, tp INTEGER,  unreg INTEGER, bonus INTEGER, points INTEGER)");
+q.exec();
+db.close();
+    }
+
+            if (!db.open()) {QMessageBox::critical(this, "Критическая ошибка!",  db.lastError().text());}
+}
+
+
+
+void MainWindow::on_actView_triggered(bool checked)
+{
+appendTable(checked);
+}
+void MainWindow::appendTable() {
+    appendTable(false);
+}
+
+void MainWindow::on_actManageViews_triggered()
+{
+    ViewDialog *dlg = new ViewDialog(this, trn);
     dlg->exec();
 }

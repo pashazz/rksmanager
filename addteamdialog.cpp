@@ -2,15 +2,14 @@
 #include "ui_addteamdialog.h"
 #include <QFile>
 #include <QTextStream>
-addTeamDialog::addTeamDialog(QWidget *parent, QStringList teams) :
+addTeamDialog::addTeamDialog(QWidget *parent, QStringList teams, QStringList players) :
     QDialog(parent),
     m_ui(new Ui::addTeamDialog)
 {
     m_ui->setupUi(this);
     //получить доступные команды
-    foreach (QString team, teams) {
-        m_ui->cbTeams->addItem(team);
-    }
+    m_ui->cbTeams->addItems(teams);
+    m_ui->cbPlayer->addItems(players);
 
 
 }
@@ -34,5 +33,5 @@ void addTeamDialog::changeEvent(QEvent *e)
 
 void addTeamDialog::on_buttonBox_accepted()
 {
-    emit teamAdded(m_ui->txtPlayer->text(), m_ui->cbTeams->currentText());
+    emit teamAdded(m_ui->cbPlayer->currentText(), m_ui->cbTeams->currentText());
 }

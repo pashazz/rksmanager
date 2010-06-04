@@ -2,6 +2,7 @@
 #define Tournament_H
 #include <QtSql>
 #include "club.h"
+#include "view.h"
 namespace TechResult {
     enum Result {
       HomeWin = 1,
@@ -14,7 +15,7 @@ class Tournament : public QObject
 {
 
 public:
-    Tournament(QString dir, QString title, QString country, QStringList teams, QStringList gmrs);
+    Tournament(QString dir, QString title, QString country, QStringList teams, QStringList gmrs, bool views);
     Tournament() {qDebug() << "emty";}
 Tournament(QString dir); //загрузка турнира
     QList<Club> getClubs () const {return clubs;}
@@ -28,8 +29,15 @@ Tournament(QString dir); //загрузка турнира
   //виды ТП
   virtual void addMatch(QString home, QString away, TechResult::Result res, int tour);
   virtual  ~Tournament();
+  void addView (QString name, QList <Club> c);
+  void removeView (View v);
+  QList <View> views () const {return this->view;}
  virtual bool checkPlanning(QString *message);
     void checkSkips (QString home, QString away);
+    void setChangeList (QStringList lst);
+    QStringList changeList () const {return changes;}
+    bool isViewsEnabled () const {return _view;}
+    bool makeChange (QString before, QString after);
 protected:
 QList <Club> clubs;
 QList <Match> matches;
@@ -40,6 +48,11 @@ QStringList gamers;
 QList <Player> getPlayers(QString str);
 QString getMatches(QString team) ;
 void loadMatches();
+void loadViews();
+QString getNick(QString);
+QStringList changes;
+QList <View> view;
+bool _view;
 private:
 
 };

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>630</width>
+    <width>921</width>
     <height>430</height>
    </rect>
   </property>
@@ -79,8 +79,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>630</width>
-     <height>19</height>
+     <width>921</width>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="mnuFile">
@@ -89,6 +89,8 @@
     </property>
     <addaction name="actNew"/>
     <addaction name="actOpen"/>
+    <addaction name="separator"/>
+    <addaction name="actPlayers"/>
     <addaction name="separator"/>
     <addaction name="actPrint"/>
     <addaction name="actExit"/>
@@ -99,6 +101,8 @@
     </property>
     <addaction name="actPlanning"/>
     <addaction name="actPlay"/>
+    <addaction name="actChange"/>
+    <addaction name="actManageViews"/>
    </widget>
    <widget class="QMenu" name="mnuView">
     <property name="title">
@@ -106,6 +110,7 @@
     </property>
     <addaction name="actFont"/>
     <addaction name="actColor"/>
+    <addaction name="actView"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -194,6 +199,35 @@
   <action name="actRed">
    <property name="text">
     <string>Красные карточки</string>
+   </property>
+  </action>
+  <action name="actChange">
+   <property name="text">
+    <string>Заменить игрока</string>
+   </property>
+  </action>
+  <action name="actPlayers">
+   <property name="text">
+    <string>Игроки</string>
+   </property>
+  </action>
+  <action name="actView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Просмотреть представления</string>
+   </property>
+  </action>
+  <action name="actManageViews">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Представления...</string>
    </property>
   </action>
  </widget>

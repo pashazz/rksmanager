@@ -29,10 +29,18 @@ private:
     Tournament *trn;
     void createMenus();
     void appendTable();
+    void appendTable(bool);
+    void createStatusBar();
     bool loaded;
+    QLabel *infolabel;
     // для будущего функционала
     bool leag;
+    void checkPlayers();
 private slots:
+    void on_actManageViews_triggered();
+    void on_actView_triggered(bool checked);
+    void on_actPlayers_triggered();
+    void on_actChange_triggered();
     void on_tableWidget_itemDoubleClicked(QTableWidgetItem* item);
     void on_actRed_triggered();
     void on_actYellow_triggered();

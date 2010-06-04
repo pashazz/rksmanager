@@ -336,7 +336,7 @@ void AddMatchDialog::doAction(QListWidget *list, QListWidget *playersList)
                 case 1:
                 if (!yellowCarders.contains(data.at(0))) {
                 stats->yellowCards.append(stats->club.getPlayer(data.at(0)));
-                it->setIcon(QIcon(":/images/images/whistle.png"));
+                it->setIcon(QIcon(":/images/images/yellow"));
                 it->setText(data.at(0));
                 list->addItem(it);
                 yellowCarders.append(data.at(0));}
@@ -364,7 +364,7 @@ void AddMatchDialog::doAction(QListWidget *list, QListWidget *playersList)
                 break;
                 case 3:
                 stats->traumas.append(stats->club.getPlayer(data.at(0)));
-                it->setIcon(QIcon(":/images/images/boots.png"));
+                it->setIcon(QIcon(":/images/traumas"));
                 it->setText(data.at(0));
                 list->addItem(it);
                 break;

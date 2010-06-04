@@ -17,7 +17,7 @@ SelectMatchDialog::SelectMatchDialog(QWidget *parent, Tournament *t) :
         currentTour = 1;
  m_ui->sbTours->setMaximum(currentTour);
  loadMatches(currentTour);
-
+createMenus();
 }
 
 SelectMatchDialog::~SelectMatchDialog()
@@ -174,6 +174,7 @@ trn->checkSkips(m.home.club.name, m.away.club.name);
     sq.bindValue(":away", m.away.club.displayName);
     if (!sq.exec()) {qDebug() << "SQL Error: "  +sq.lastError().text() + " in query " + sq.lastQuery();}
    else {qDebug() << "Query done" << sq.executedQuery();}
+
 //tune
    loadMatches(1);
 
@@ -184,7 +185,7 @@ trn->checkSkips(m.home.club.name, m.away.club.name);
 
 void SelectMatchDialog::on_lstMatches_itemClicked(QListWidgetItem* item)
 {
-    m_ui->lblData->setText(item->data(Qt::UserRole).toStringList().join(";"));
+    current = item;
 }
 
 void SelectMatchDialog::createMenus() {
@@ -195,14 +196,45 @@ void SelectMatchDialog::createMenus() {
     connect(tp, SIGNAL(triggered(QAction*)), this, SLOT(onTP(QAction*)));
 }
 void SelectMatchDialog::onTP(QAction *act) {
-      QStringList data = current->data(Qt::UserRole).toStringList();
-    QSqlQuery q;
+    QStringList data = current->data(Qt::UserRole).toStringList();
     QString home = data.at(0);
     QString away = data.at(1);
+    qDebug() << "selectmatchdialog.cpp:202 " << data;
+    TechResult::Result res;
 //проверку дисквалификаций не включаем!!!
-    if (act->text() == "7-0") {
+    if (act->text() == "7-0")
+        res = TechResult::HomeWin;
+     else if (act->text() == "0-0")
+        res = TechResult::Draw;
+    else if (act->text() == "0-7")
+        res = TechResult::AwayWin;
 
+    trn->addMatch(home, away, res, m_ui->sbTours->value());
+        QSqlDatabase db = QSqlDatabase::database("planning");
+    QSqlQuery sq (db);
+    QString table = "Tour" + QVariant(m_ui->sbTours->value()).toString();
+    sq.prepare("UPDATE "+table+" SET played=:played WHERE home=:home AND away=:away");
+    sq.bindValue(":played", true);
+    sq.bindValue(":home", home);
+    sq.bindValue(":away", away);
+    if (!sq.exec()) {qDebug() << "SQL Error: "  +sq.lastError().text() + " in query " + sq.lastQuery();}
+   else {qDebug() << "Query done" << sq.executedQuery();}
+    loadMatches(m_ui->sbTours->value());
+}
 
-    }
+void SelectMatchDialog::on_lstMatches_customContextMenuRequested(QPoint pos)
+{
+    QWidget *w = qobject_cast<QWidget*>(sender());
+    if (m_ui->lstMatches->itemAt(pos) != 0)
+    tp->popup(w->mapToGlobal(pos));
+  }
 
+void SelectMatchDialog::on_lstMatches_itemChanged(QListWidgetItem* item)
+{
+    current = item;
+}
+
+void SelectMatchDialog::on_lstMatches_itemPressed(QListWidgetItem* item)
+{
+        current = item;
 }

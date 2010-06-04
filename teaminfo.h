@@ -28,6 +28,14 @@ private:
     void buildItem(Match m);
      Club c;
     QMap <QString, Match> matches;
+    int curPlayer;
+    void setStats ();
+    void setPlayerStats (Player p);
+
+private slots:
+    void on_tblPlayers_itemClicked(QTableWidgetItem* item);
+    void on_tblPlayers_itemDoubleClicked(QTableWidgetItem* item);
+    void viewMatch (QListWidgetItem *item);
 };
 
 #endif // TEAMINFO_H

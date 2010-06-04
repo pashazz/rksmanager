@@ -27,7 +27,10 @@ private:
     QStringList players, teams;
     QStringList countries;
     QStringList avalTeams;
+    QStringList gamers;
+    QStringList changes;
 private slots:
+    void on_cmdChange_clicked();
     void on_lstPlayers_itemClicked(QListWidgetItem* item);
     void on_lstPlayers_itemChanged(QListWidgetItem* item);
     void on_cmdOK_clicked();

@@ -26,6 +26,9 @@ private:
      QMenu *tp;
      QListWidgetItem *current;
 private slots:
+    void on_lstMatches_itemPressed(QListWidgetItem* item);
+    void on_lstMatches_itemChanged(QListWidgetItem* item);
+    void on_lstMatches_customContextMenuRequested(QPoint pos);
     void on_lstMatches_itemClicked(QListWidgetItem* item);
     void on_lstMatches_itemDoubleClicked(QListWidgetItem* item);
     void on_sbTours_valueChanged(int );

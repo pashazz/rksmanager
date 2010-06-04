@@ -1,0 +1,24 @@
+CSKA,cska
+2,DF,Deividas Semberas
+4,DF,Sergei Ignashevich
+5,MF,Ramon
+6,DF,Aleksei Berezutskiy
+7,MF,Daniel Carvalho
+8,FW,Dmitri Ryzhov
+9,FW,Vagner Love
+10,MF,Alan Dzagoev
+11,MF,Pavel Mamaev
+12,FW,Ouwo Moussa Maazou
+14,FW,Ricardo Jesus
+15,DF,Chidi Odiah
+17,MF,Milos Krasic
+22,MF,Evgeni Aldonin
+24,DF,Vasili Berezutskiy
+25,MF,Elvir Rahimic
+33,GK,Eugeni Pomazan
+35,GK,Igor Akinfeev
+36,DF,Anton Vlasov
+42,DF,Georgi Schennikov
+50,DF,Anton Grigoriev
+88,MF,Caner Erkin
+89,FW,Tomas Necid

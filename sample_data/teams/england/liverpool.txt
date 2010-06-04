@@ -1,0 +1,33 @@
+Liverpool,liverpool
+1,GK,Diego Cavaleri
+2,DF,Andrea Dossena
+4,DF,Sami Hyypia
+5,DF,Daniel Agger
+8,MF,Steven Gerrard
+9,FW,Fernando Torres
+10,FW,Andrey Voronin
+11,MF,Riera
+12,DF,Fabio Aurelio
+14,MF,Xabi Alonso
+15,MF,Yossi Benayoun
+16,MF,Jermaine Pennant
+17,DF,Arbeloa
+18,FW,Dirk Kuyt
+19,MF,Ryan Babel
+20,MF,Javier Mascherano
+21,MF,Lucas
+22,DF,Emiliano Insua
+23,DF,Jamie Carragher
+24,FW,David Ngog
+25,GK,Reyna
+26,MF,Jay Spearing
+27,F,Philliph Degen
+28,MF,Damien Plessis
+30,GK,Charles Itandje
+31,MF,Nabil El Zhar
+32,DF,Stephen Darby
+35,MF,Ray Putterill
+36,MF,Ryan Flinn
+37,DF,Martin Skrtel
+45,DF,Mikel san Jose
+52,FW,Daniel Pacheco

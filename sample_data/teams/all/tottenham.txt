@@ -1,0 +1,32 @@
+Tottenham Hotspurs,tottenham
+1,GK,Gomes
+2,DF,Alan Hutton
+3,DF,Garreth Bale
+4,MF,Didier Zokora
+5,MF,David Bentley
+6,MF,Tom Huddlestone
+7,MF,Aaron Lennon
+8,MF,Jermaine Jenas
+9,FW,Roman Pavluchenko
+10,FW,Darren Bent
+11,MF,Gilberto
+12,MF,Wilson Palacios
+14,MF,Luka Modric 
+15,FW,Robbie Keane
+16,DF,Chris Gunter 
+17,FW,Giovani dos Santos
+18,FW,Fraizer Campbell
+19,MF,Adel Taarabt
+20,DF,Michael Dawson
+21,DF,Pascal Chimbonda
+22,DF,Vedran Corluka
+23,GK,Carlo Cudicini
+24,MF,Jamie OHara
+25,FW,Jermaine Defo
+26,DF,Ledley King
+27,GK,Ben Alnwick
+32,DF,Benoit Assou-Ekotto
+33,DF,Ricardo Rocha
+35,DF,Dorian Dervitte
+39,DF,Jonathan Woodgate
+41,MF,John Bostock

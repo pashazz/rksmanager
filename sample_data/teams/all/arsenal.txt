@@ -1,0 +1,30 @@
+Arsenal,arsenal
+1,GK,Manuel Almunia
+2,DF,Abu Diaby
+3,DF,Bacary Sagna
+4,MF,Francesc Fabregas
+5,DF,Kolo Toure
+7,MF,Tomas Rosicky
+8,MF,Samir Nasri
+9,FW,Eduardo
+10,DF,William Gallas
+11,FW,Robin van Persie
+12,FW,Carlos Vela
+15,MF,Denilson
+16,MF,Aaron Ramsey
+17,MF,Alexandre Song
+18,DF,Mikael Silvestre
+19,MF,Jack Wilshere
+20,DF,Johan Djourou
+21,GK,Lucas Fabianski
+22,DF,Gael Clichy
+23,FW,Andrey Arshavin
+24,GK,Vito Mannone
+25,FW,Emmanuel Adebayor
+26,FW,Nicklas Bendtner
+27,MF,Emmanuel Eboye
+28,MF,Amauri Bischoff
+39,MF,Henri Lansbury
+42,MF,Fran Merida
+45,FW,Vincent van den Berg
+47,MF,Mark Randall

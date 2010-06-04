@@ -1,0 +1,29 @@
+Chelsea,chelsea
+1,GK,Petr Cech
+2,DF,Branislav Ivanovich
+3,DF,Ashley Cole
+5,MF,Michael Essien
+6,DF,Ricardo Carvalho
+7,MF,Quaresma
+8,MF,Frank Gerrard
+9,FW,Franco di Santo
+10,MF,Joe Cole
+11,FW,Didier Drogba
+12,MF,John Obi Mikel
+13,MF,Michael Ballack
+15,MF,Florent Maloua
+17,DF,Bosingwa
+18,MF,Yuri Zhirkov
+19,DF,Paulo Ferreira
+20,MF,Deco
+21,FW,Salomon Kalou
+26,DF,John Terry
+30,GK,Rhys Taylor
+33,DF,Alex
+35,DF,Beletti
+39,FW,Nicolas Anelka
+40,GK,Hilario
+41,DF,Michael Mancienne
+45,MF,Sergio Tereja
+46,MF,Fabio Ferreira
+47,MF,Fabio Paim

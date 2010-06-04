@@ -1,0 +1,32 @@
+Lokomotiv Moscow,lokomotiv
+1,GK,Ivan Levenets
+3,DF,Oleg Kuzmin
+4,DF,Rodolfo
+5,MF,Tomislav Dujmovic
+6,DF,Milan Milanovic
+7,MF,Dmitry Torbinsky
+8,MF,Denis Glushakov
+9,FW,Peter Odemwingie
+10,MF,David Mujiri
+11,FW,Dmitry Sychev
+14,MF,Igor Smolnikov
+15,DF,Fininho
+16,MF,Charles
+17,DF,Dmitri Sennikov
+19,FW,Baye Djiby Fall
+20,DF,Jan Durica
+22,GK,Ivan Pelizzolli
+23,DF,Marco Basa
+25,FW,Razvan Cocis
+32,GK,Marek Cech
+33,GK,Artem Gomelko
+36,DF,Makhmadnaim Sharifi
+44,DF,Ruslan Kambolov
+45,FW,Aleksandr Minchenkov
+55,MF,Renat Yanbaev
+63,MF,Diniyar Bilyaletdinov
+69,DF,Sergei Efimov
+77,MF,Stanislav Ivanov
+81,MF,Alan Gatagov
+85,GK,Marinato Guillerme
+97,MF,Nikita Piliev
